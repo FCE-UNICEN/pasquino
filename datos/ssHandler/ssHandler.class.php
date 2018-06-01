@@ -140,10 +140,12 @@
                         $port = ":{$_SERVER['SERVER_PORT']}";
                     $server = $_SERVER['SERVER_NAME'];
                     
-                    if(isset($_SERVER["HTTP_X_FORWARDED_SERVER"]))
-                    	$server = $_SERVER["HTTP_X_FORWARDED_SERVER"];
-                    
-                    $loc = "http://{$server}{$port}$_SERVER[PHP_SELF]";
+                    if(isset($_SERVER["HTTP_X_FORWARDED_HOST"]))
+    					$server = $_SERVER["HTTP_X_FORWARDED_HOST"];
+
+                    $path = Configuracion::getGessedAppRelpath();
+
+                    $loc = "http://{$server}{$port}{$path}";
                     if(!empty($_SERVER['QUERY_STRING'])) $loc .= '?'.$_SERVER['QUERY_STRING'];
                     header("Location: $loc");
                     exit();

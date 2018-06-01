@@ -90,20 +90,22 @@
 					srcObj = $(aSourceID).parent();
 				}
 				elCampo.addClass("loading");
+				$(document).trigger('loadingList');
 				
 				$.ajax({
 					url: getAccionUrl(aMod,aAction,"plain")+ "&" +$(this).serialize(),
 					success: function(response, status, xhr) {	
 						
 						elCampo.removeClass("loading");
+                        $(document).trigger('doneLoadingList');
 				  		if (status == "error") {
 				  			alert("Ocurrio un Error: " + xhr.status + " " + xhr.statusText);
-				  		}else{				  			
-				  			$("body").crearDiv("tmp");
-							$("#tmp").hide().html("").html(response);
-							var grid = $("#tmp").find(selectorSource);
-							var footer = $("#tmp").find("footer");
-							$("#tmp").html("");
+				  		}else{
+							var $tmp = $("<div>");
+							$tmp.html(response);
+							var grid = $tmp.find(selectorSource);
+							var footer = $tmp.find("footer");
+
 							srcObj.html(grid.html());
 							srcObj.parents(".lista").find("footer").html(footer.html());
 							
@@ -112,8 +114,9 @@
 				  			if(aOptions!=null &&
 				  			   aOptions.success!=null && 
 				  			   (typeof aOptions.success == 'function')) 
-				  				aOptions.success();
-			
+				  				aOptions.success(response, status, xhr);
+				  			
+				  			
 				  		}
 					}
 						
